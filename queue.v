@@ -1,7 +1,7 @@
 module queue(
     input wire [7:0] back,
     input wire [2:0] pos_back,
-    input wire extern_out,
+    input wire [1:0] opcode,
     input wire clk,
     input wire rst,
     output reg [15:0] top_conc
@@ -40,23 +40,32 @@ module queue(
             end;*/
 
 
-            case(extern_out)
-                1'b0: begin
-                    top_conc <= {arr[0], 8'b1010};  // исправлено на <=
+            case(opcode)
+                2'b0: begin ///push
+                    arr[pos_back] <= back;
+                    top_conc <= 16'h0;
+                end
+                2'b1: begin ///get_first and push
+                    top_conc <= {arr[0], 8'h0};  // исправлено на <=
                     
                     // Сдвиг на 1 ячейку
                     for (i = 1; i < 5; i = i + 1)
                         arr[i - 1] <= arr[i];
                     arr[pos_back] <= back;  // исправлено на <=
                 end
-                1'b1: begin
+                2'b10: begin ///get first pair and push res
                     top_conc <= {arr[0], arr[1]};  // исправлено на <=
                     
                     // Сдвиг на 2 ячейки
                     for (i = 2; i < 5; i = i + 1)
                         arr[i - 2] <= arr[i];
-                    arr[4] <= 8'b0;  // исправлено на <=
-                    arr[3] <= 8'b0;  // исправлено на <=
+                    arr[pos_back] <= back;
+                end
+                2'b11: begin // pop front
+                    top_conc <= {arr[0], 8'h0};
+                    for (i = 1; i < 5; i = i + 1)
+                        arr[i - 1] <= arr[i];
+                     
                 end
             endcase  // убрана точка с запятой
         end
