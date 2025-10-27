@@ -1,7 +1,5 @@
 module queue_with_controller(
-    (
     input wire [7:0] back,
-    input wire [2:0] pos_back,
     input wire [1:0] opcode,
 
     input wire clk,
@@ -83,6 +81,6 @@ module queue_with_controller(
             endcase  
         end
     end
-)
+
 
 endmodule;
