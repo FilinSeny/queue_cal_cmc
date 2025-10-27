@@ -55,13 +55,13 @@ module queue_with_controller(
                     arr[pos_back] = back;
                     pos_back = pos_back + 1;
                 end
-                2'b1: begin ///get_first and push
+                /*2'b1: begin ///get_first and push
                     
                     // Сдвиг на 1 ячейку
                     for (i = 1; i < 5; i = i + 1)
                         arr[i - 1] = arr[i];
                     arr[pos_back] = back;  // исправлено на <=
-                end
+                end*/
                 2'b10: begin ///get first pair and push res
                     
                     
