@@ -11,10 +11,13 @@ calculator_test.v - Тестовый модуль для верификации
 Для сборки проекта необходимо компилировать следующие файлы в указанном порядке: \\
 
 
-iverilog -o calculator ALU.v queue_with_controller.v calculator.v \\
+```bash
 
-Для запуска тестов \\
-iverilog calculator_test.v ALU.v queue_with_controller.v calculator.v
+iverilog -o calculator ALU.v queue_with_controller.v calculator.v
+
+# Для запуска тестов
+iverilog -o test calculator_test.v ALU.v queue_with_controller.v calculator.v
+vvp test
 
 
 
