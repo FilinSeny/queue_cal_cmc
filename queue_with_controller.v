@@ -5,8 +5,7 @@ module queue_with_controller(
     input wire clk,
     input wire rst,
 
-    output wire  [15:0] top_conc,
-    output reg[2:0] pos_back,
+    output wire  [15:0] top_conc, 
     output reg[7:0] tail,
     output wire is_empty,
     output reg is_err
@@ -15,7 +14,7 @@ module queue_with_controller(
 );
 
 
-
+    reg[2:0] pos_back;
     reg [7:0] calced_back;
     assign is_empty = pos_back == 0;
 

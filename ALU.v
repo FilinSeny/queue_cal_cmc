@@ -18,12 +18,12 @@ module ALU
     input wire[15:0] operands,
     input wire [3:0] opcode, ///first bit indicates error
     input wire [7:0] push_val,
-    output reg [7:0] result,
-    output reg [1:0] queue_op,
-
+    
     input wire clk,
     input wire rst,
-    output reg sync,
+
+    output reg [7:0] result,
+    output reg [1:0] queue_op,
     output reg has_calc_err
 
 );
