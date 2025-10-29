@@ -16,8 +16,8 @@ calculator_test.v - Тестовый модуль для верификации
 iverilog -o calculator ALU.v queue_with_controller.v calculator.v
 
 # Для запуска тестов
-iverilog -o test calculator_test.v ALU.v queue_with_controller.v calculator.v
-vvp test
+iverilog calculator_test.v ALU.v queue_with_controller.v calculator.v
+
 
 
 
