@@ -1,12 +1,12 @@
 module ALU
 #(
-    parameter PUSH_CODE = 0,
-    parameter POP_CODE  = 1,
-    parameter ADD_CODE  = 2,
-    parameter MULL_CODE = 3,
-    parameter SUB_CODE  = 4,
-    parameter DIV_CODE  = 5,
-    parameter REM_CODE  = 6,
+    parameter PUSH_CODE = 4'b0000,
+    parameter POP_CODE  = 4'b0001,
+    parameter ADD_CODE  = 4'b0010,
+    parameter MULL_CODE = 4'b0011,
+    parameter SUB_CODE  = 4'b0100,
+    parameter DIV_CODE  = 4'b0101,
+    parameter REM_CODE  = 4'b0110,
 
     parameter Q_PUSH    = 2'b0,
     parameter Q_SLEEP   = 2'b01,
@@ -16,14 +16,15 @@ module ALU
 )
 (
     input wire[15:0] operands,
-    input wire [2:0] opcode,
+    input wire [3:0] opcode, ///first bit indicates error
     input wire [7:0] push_val,
     output reg [7:0] result,
     output reg [1:0] queue_op,
 
     input wire clk,
     input wire rst,
-    output reg sync
+    output reg sync,
+    output reg has_calc_err
 
 );
 
@@ -32,7 +33,11 @@ module ALU
 end*/
 
 always @* begin
-    if (1) begin
+    if (rst) begin 
+        has_calc_err = 0;
+    end
+    else begin
+
         case(opcode) 
             PUSH_CODE: begin
                 result = push_val;
@@ -55,12 +60,22 @@ always @* begin
                 queue_op = Q_GET_AND_PUSH;
             end
             DIV_CODE: begin
-                result = operands[7:0] / operands[15:8];
-                queue_op = Q_GET_AND_PUSH;
+                if (operands[15:8] == 0) begin
+                    has_calc_err = 1;
+                end 
+                else begin
+                    result = operands[7:0] / operands[15:8];
+                    queue_op = Q_GET_AND_PUSH;
+                end;
             end
             REM_CODE: begin
-                result = operands[7:0] % operands[15:0];
-                queue_op = Q_GET_AND_PUSH;
+                if (operands[15:8] == 0) begin
+                    has_calc_err = 1;
+                end 
+                else begin
+                    result = operands[7:0] % operands[15:0];
+                    queue_op = Q_GET_AND_PUSH;
+                end
             end
 
             default: begin
