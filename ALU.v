@@ -79,7 +79,7 @@ always @* begin
             end
 
             default: begin
-                if (opcode[3]) begin
+                if (!opcode[3]) begin
                     has_calc_err = 1;
                 end
 
