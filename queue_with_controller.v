@@ -6,29 +6,24 @@ module queue_with_controller(
     input wire rst,
 
     output wire  [15:0] top_conc,
-    output reg[2:0] pos_back
+    output reg[2:0] pos_back,
+    output reg[7:0] tail,
+    output wire is_empty,
+    output reg is_err
+
     
 );
 
 
+
     reg [7:0] calced_back;
-    initial begin
-        pos_back = 3'b0;
-    end
+    assign is_empty = pos_back == 0;
 
     
     reg [7:0] arr [0:4];
     integer i;
 
-    initial begin
-        ///$dumpfile("queue.vcd");
-        ///$dumpvars(2, queue); 
-        for (i = 0; i < 5; i = i + 1)
-                arr[i] <= 8'b0;  
-            ///top_conc <= 16'b0;   
-        
-    end
-
+    
     wire[39:0] debug_reg;
 
     
@@ -39,7 +34,9 @@ module queue_with_controller(
     
     assign top_conc = {arr[0], arr[1]};
     
-    
+    always @* begin
+        tail = arr[pos_back - 1];
+    end
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
@@ -47,6 +44,7 @@ module queue_with_controller(
             for (i = 0; i < 5; i = i + 1)
                 arr[i] = 8'b0;  
             pos_back = 0; 
+            is_err = 0;
         end
         
         else begin
@@ -55,33 +53,39 @@ module queue_with_controller(
 
             case(opcode)
                 2'b0: begin ///push
-                    arr[pos_back] = calced_back;
-                    pos_back = pos_back + 1;
+                    if (pos_back == 5) begin
+                        is_err = 1;
+                    end
+                    else begin
+                        arr[pos_back] = calced_back;
+                        pos_back = pos_back + 1;
+                    end
                 end
-                /*2'b1: begin ///get_first and push
-                    
-                    // Сдвиг на 1 ячейку
-                    for (i = 1; i < 5; i = i + 1)
-                        arr[i - 1] = arr[i];
-                    arr[pos_back] = back;  // исправлено на <=
-                end*/
                 2'b10: begin ///get first pair and push res
                     
                     
                     // Сдвиг на 2 ячейки
-                    
-                    for (i = 2; i < 5; i = i + 1)
-                        arr[i - 2] = arr[i];
-                    pos_back = pos_back - 1;
-                    arr[pos_back - 1] = calced_back;
-                    arr[pos_back] = 0;
+                    if (pos_back < 2) begin
+                        is_err = 1;
+                    end
+                    else begin
+                        for (i = 2; i < 5; i = i + 1)
+                            arr[i - 2] = arr[i];
+                        pos_back = pos_back - 1;
+                        arr[pos_back - 1] = calced_back;
+                        arr[pos_back] = 0;
+                    end
                     
                 end
                 2'b11: begin // pop front
-                   
-                    for (i = 1; i < 5; i = i + 1)
-                        arr[i - 1] = arr[i];
-                    pos_back = pos_back - 1;
+                    if (pos_back == 0) begin
+                        is_err = 1;
+                    end
+                    else begin
+                        for (i = 1; i < 5; i = i + 1)
+                            arr[i - 1] = arr[i];
+                        pos_back = pos_back - 1;
+                    end
                 end
             endcase  
         end
