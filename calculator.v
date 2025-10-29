@@ -11,7 +11,7 @@ module calculator(
     output wire valid
 );
 
-    
+    wire invalid;
     wire [7:0] count_val;
     wire [15:0] get_val;
     wire [1:0] queue_op;  
@@ -21,8 +21,9 @@ module calculator(
 
 
     wire [3:0] opcode;
-    assign valid = alu_err | empty_err;
-    assign opcode = {valid | !apply, op};
+    assign invalid = alu_err | empty_err;
+    assign valid = !invalid;
+    assign opcode = {invalid | !apply, op};
     
 
    
