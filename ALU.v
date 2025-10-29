@@ -79,6 +79,10 @@ always @* begin
             end
 
             default: begin
+                if (opcode[3]) begin
+                    has_calc_err = 1;
+                end
+
                 result = 0;
                 queue_op = Q_SLEEP;
             end
