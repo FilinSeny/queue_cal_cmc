@@ -8,10 +8,10 @@ module ALU
     parameter DIV_CODE  = 5,
     parameter REM_CODE  = 6,
 
-    parameter Q_PUSH    = 0,
-    parameter Q_SLEEP   = 1,
-    parameter Q_POP     = 3,
-    parameter Q_GET_AND_PUSH    = 2
+    parameter Q_PUSH    = 2'b0,
+    parameter Q_SLEEP   = 2'b01,
+    parameter Q_POP     = 2'b11,
+    parameter Q_GET_AND_PUSH    = 2'b10
 
 )
 (
@@ -27,39 +27,52 @@ module ALU
 
 );
 
-always @(posedge rst) begin
+/*always @(posedge rst) begin
     result <= 0;
+end*/
+
+always @* begin
+    if (1) begin
+        case(opcode) 
+            PUSH_CODE: begin
+                result = push_val;
+                queue_op = Q_PUSH;
+            end
+            POP_CODE: begin
+                queue_op = Q_POP;
+                result = 8'b0; 
+            end
+            ADD_CODE: begin 
+                result = operands[15:8] + operands[7:0];
+                queue_op = Q_GET_AND_PUSH;
+            end
+            MULL_CODE: begin
+                result = operands[15:8] * operands[7:0];
+                queue_op = Q_GET_AND_PUSH;
+            end
+            SUB_CODE: begin
+                result = operands[7:0] - operands[15:8];
+                queue_op = Q_GET_AND_PUSH;
+            end
+            DIV_CODE: begin
+                result = operands[7:0] / operands[15:8];
+                queue_op = Q_GET_AND_PUSH;
+            end
+            REM_CODE: begin
+                result = operands[7:0] % operands[15:0];
+                queue_op = Q_GET_AND_PUSH;
+            end
+
+            default: begin
+                result = 0;
+                queue_op = Q_SLEEP;
+            end
+        endcase
+    end;
+
+    
 end
 
-always @(posedge clk) begin
-    case(opcode) 
-        PUSH_CODE: begin
-            result = push_val;
-            queue_op = Q_PUSH;
-        end
-        POP_CODE: begin
-            queue_op = Q_POP;
-        end
-        ADD_CODE: begin //сложение
-            result = operands[15:8] + operands[7:0];
-            queue_op = Q_GET_AND_PUSH;
-        end
-        MULL_CODE: begin
-            result = operands[15:8] * operands[7:0];
-            queue_op = Q_GET_AND_PUSH;
-        end
 
-        default: begin
-            result = 0;
-            queue = Q_SLEEP;
-        end
-    endcase
-
-    sync = 1;
-end
-
-always @(negedge clk) begin
-    sync = 0;
-end
 
 endmodule

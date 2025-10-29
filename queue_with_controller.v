@@ -10,8 +10,10 @@ module queue_with_controller(
     
 );
 
+
+    reg [7:0] calced_back;
     initial begin
-        pos_back = 0;
+        pos_back = 3'b0;
     end
 
     
@@ -39,20 +41,21 @@ module queue_with_controller(
     
     
 
-    always @(posedge clk) begin
+    always @(posedge clk or posedge rst) begin
         if (rst) begin
             // Сброс
             for (i = 0; i < 5; i = i + 1)
-                arr[i] <= 8'b0;  
-            pos_back <= 0; 
+                arr[i] = 8'b0;  
+            pos_back = 0; 
         end
+        
         else begin
-            
+            calced_back = back;
 
 
             case(opcode)
                 2'b0: begin ///push
-                    arr[pos_back] = back;
+                    arr[pos_back] = calced_back;
                     pos_back = pos_back + 1;
                 end
                 /*2'b1: begin ///get_first and push
@@ -66,10 +69,12 @@ module queue_with_controller(
                     
                     
                     // Сдвиг на 2 ячейки
+                    
                     for (i = 2; i < 5; i = i + 1)
                         arr[i - 2] = arr[i];
                     pos_back = pos_back - 1;
-                    arr[pos_back - 1] = back;
+                    arr[pos_back - 1] = calced_back;
+                    arr[pos_back] = 0;
                     
                 end
                 2'b11: begin // pop front
