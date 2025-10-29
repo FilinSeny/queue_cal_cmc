@@ -60,7 +60,7 @@ always @* begin
                 queue_op = Q_GET_AND_PUSH;
             end
             DIV_CODE: begin
-                if (operands[15:8] == 0) begin
+                if (operands[15:8] == 8'b0) begin
                     has_calc_err = 1;
                 end 
                 else begin
@@ -69,11 +69,11 @@ always @* begin
                 end;
             end
             REM_CODE: begin
-                if (operands[15:8] == 0) begin
+                if (operands[15:8] == 8'b0) begin
                     has_calc_err = 1;
                 end 
                 else begin
-                    result = operands[7:0] % operands[15:0];
+                    result = operands[7:0] % operands[15:8];
                     queue_op = Q_GET_AND_PUSH;
                 end
             end

@@ -21,7 +21,9 @@ module calculator(
 
 
     wire [3:0] opcode;
-    assign opcode = {alu_err | empty_err | !apply, op};
+    assign valid = alu_err | empty_err;
+    assign opcode = {valid | !apply, op};
+    
 
    
     queue_with_controller queue(

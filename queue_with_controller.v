@@ -31,7 +31,8 @@ module queue_with_controller(
 
     ///всегда на алу уходят две первых ячейки для того чтоб можно было сразу делать предподсчет
     
-    assign top_conc = {arr[0], arr[1]};
+
+    assign top_conc = {(pos_back == 3'b001) ? 8'hFF : arr[1], arr[0]};
     
     always @* begin
         tail = arr[pos_back - 1];
