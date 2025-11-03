@@ -15,7 +15,8 @@ module calculator(
     wire [7:0] count_val;
     wire [15:0] get_val;
     wire [1:0] queue_op;  
-    
+    wire [2:0] pos_back;
+
     wire empty_err; ///ошибка внутри очереди
     wire alu_err; /// ошибка вида деления на 0
 
@@ -50,9 +51,11 @@ module calculator(
         .opcode(opcode),
         .push_val(in),
         
+
         .result(count_val),
         .queue_op(queue_op),
         .has_calc_err(alu_err)
+
     );
 
 endmodule

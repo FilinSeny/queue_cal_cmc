@@ -35,6 +35,8 @@ end*/
 always @* begin
     if (rst) begin 
         has_calc_err = 0;
+        result = 0;
+        queue_op = 1;
     end
     else begin
 
@@ -70,7 +72,7 @@ always @* begin
             end
             REM_CODE: begin
                 if (operands[15:8] == 8'b0) begin
-                    has_calc_err = 1;
+                    has_calc_err = 1; 
                 end 
                 else begin
                     result = operands[7:0] % operands[15:8];
