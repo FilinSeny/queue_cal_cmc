@@ -1,7 +1,7 @@
 # Структура проекта
 ALU.v - Арифметико-логическое устройство
 
-queue_with_controller.v - очередь
+queue_with_controller.v - Контроллер очереди
 
 calculator.v - Основной модуль калькулятора
 
