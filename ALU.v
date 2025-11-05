@@ -39,27 +39,47 @@ always @* begin
         queue_op = 1;
     end
     else begin
-		  has_calc_err = 1'b0;
+		  ///has_calc_err = 1'b0;
         case(opcode) 
             PUSH_CODE: begin
                 result = push_val;
                 queue_op = Q_PUSH;
+                if (has_calc_err == 0) 
+                    has_calc_err = 1'b0;
+                else
+                    has_calc_err = 1'b1;
             end
             POP_CODE: begin
                 queue_op = Q_POP;
-                result = 8'b0; 
+                result = 8'b0;
+                if (has_calc_err == 0) 
+                    has_calc_err = 1'b0;
+                else
+                    has_calc_err = 1'b1; 
             end
             ADD_CODE: begin 
                 result = operands[15:8] + operands[7:0];
                 queue_op = Q_GET_AND_PUSH;
+                if (has_calc_err == 0) 
+                    has_calc_err = 1'b0;
+                else
+                    has_calc_err = 1'b1;
             end
             MULL_CODE: begin
                 result = operands[15:8] * operands[7:0];
                 queue_op = Q_GET_AND_PUSH;
+                if (has_calc_err == 0) 
+                    has_calc_err = 1'b0;
+                else
+                    has_calc_err = 1'b1;
             end
             SUB_CODE: begin
                 result = operands[7:0] - operands[15:8];
                 queue_op = Q_GET_AND_PUSH;
+                if (has_calc_err == 0) 
+                    has_calc_err = 1'b0;
+                else
+                    has_calc_err = 1'b1;
             end
             DIV_CODE: begin
                 if (operands[15:8] == 8'b0) begin
@@ -80,7 +100,14 @@ always @* begin
             default: begin
                 if (!opcode[3]) begin
                     has_calc_err = 1;
+                end else begin
+                    if (has_calc_err == 0) 
+                        has_calc_err = 1'b0;
+                    else
+                        has_calc_err = 1'b1;
                 end
+
+
 
                 result = 0;
                 queue_op = Q_SLEEP;
