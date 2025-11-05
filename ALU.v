@@ -39,7 +39,7 @@ always @* begin
         queue_op = 1;
     end
     else begin
-
+		  has_calc_err = 1'b0;
         case(opcode) 
             PUSH_CODE: begin
                 result = push_val;
@@ -65,19 +65,16 @@ always @* begin
                 if (operands[15:8] == 8'b0) begin
                     has_calc_err = 1;
                 end 
-                else begin
                     result = operands[7:0] / operands[15:8];
                     queue_op = Q_GET_AND_PUSH;
-                end;
-            end
+                
+				end
             REM_CODE: begin
                 if (operands[15:8] == 8'b0) begin
                     has_calc_err = 1; 
                 end 
-                else begin
                     result = operands[7:0] % operands[15:8];
                     queue_op = Q_GET_AND_PUSH;
-                end
             end
 
             default: begin

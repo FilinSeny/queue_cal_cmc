@@ -15,7 +15,7 @@ module queue_with_controller(
     reg[2:0] pos_back = 0;
 
     
-    reg [7:0] calced_back = 0;
+    ///reg [7:0] calced_back = 0;
     assign is_empty = pos_back == 0;
 
     
@@ -45,11 +45,11 @@ module queue_with_controller(
                 arr[i] <= 8'b0;  
             pos_back <= 0; 
             is_err <= 0;
-            calced_back <= back;
+            ///calced_back <= back;
         end
         
         else begin
-            calced_back <= back;
+            ///calced_back <= back;
 
 
             case(opcode)
@@ -96,4 +96,4 @@ module queue_with_controller(
     end
 
 
-endmodule;
+endmodule
